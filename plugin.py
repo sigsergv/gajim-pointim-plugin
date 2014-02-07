@@ -30,8 +30,8 @@ if not dir(common.xmpp):
 class PointimPlugin(GajimPlugin):
     @log_calls('PointimPlugin')
     def init(self):
-        self.description = _('Clickable Pointim links , Pointim nicks, '
-            'preview Pointim picturs.\nThe key combination alt + up in the '
+        self.description = _('Clickable Point.im links , Point.im nicks, '
+            'preview Point.im pictures (not yet).\nThe key combination alt + up in the '
             'textbox allow insert the number of last message '
             '(comment or topic).')
         self.config_dialog = PointimPluginConfigDialog(self)
@@ -46,7 +46,7 @@ class PointimPlugin(GajimPlugin):
                         'who are older 28 days'),
                     'SHOW_PREVIEW': (False, ''),
                     'PREVIEW_SIZE': (150, 'Preview size(10-512)'),
-                    'LINK_COLOR': ('#B8833E', 'Pointim link color'),
+                    'LINK_COLOR': ('#B8833E', 'Point.im link color'),
                     'SHOW_TAG_BUTTON': (True, ''),
                     'ONLY_AUTHOR_AVATAR': (True, ''),
                     'ONLY_FIRST_AVATAR': (False, ''),
@@ -125,12 +125,12 @@ class Base(object):
         # new buffer tags
         color = self.plugin.config['LINK_COLOR']
         buffer_ = self.textview.tv.get_buffer()
-        self.textview.tagSharpSlash = buffer_.create_tag('sharp_slash')
+        self.textview.tagSharpSlash = buffer_.create_tag('pointim_sharp_slash')
         self.textview.tagSharpSlash.set_property('foreground', color)
         self.textview.tagSharpSlash.set_property('underline',
             pango.UNDERLINE_SINGLE)
         id_ = self.textview.tagSharpSlash.connect('event',
-            self.pointim_hyperlink_handler, 'sharp_slash')
+            self.pointim_hyperlink_handler, 'pointim_sharp_slash')
         chat_control.handlers[id_] = self.textview.tagSharpSlash
 
         self.textview.tagPointimNick = buffer_.create_tag('pointim_nick')
@@ -151,14 +151,14 @@ class Base(object):
         self.pointim_post_uid = self.pointim_nick = ''
         self.pointim_post_re = re.compile(r'#([a-z]+)')
         self.pointim_post_comment_re = re.compile(r'#([a-z]+)/(\d+)')
-        sharp_slash = r'#[a-z]+(\/\d+)?'
+        pointim_sharp_slash = r'#[a-z]+(\/\d+)?'
         pointim_nick = r'@[a-zA-Z0-9_@:\.-]+'
         pointim_pic = r'http://i\.pointim\.com/.+/[0-9-]+\.[JPG|jpg]'
         interface = gajim.interface
-        interface.sharp_slash_re = re.compile(sharp_slash)
+        interface.pointim_sharp_slash_re = re.compile(pointim_sharp_slash)
         self.pointim_nick_re = interface.pointim_nick_re = re.compile(pointim_nick)
         self.pointim_pic_re = interface.pointim_pic_re = re.compile(pointim_pic)
-        pointim_pattern = '|' + sharp_slash + '|' + pointim_nick + '|' + pointim_pic
+        pointim_pattern = '|' + pointim_sharp_slash + '|' + pointim_nick + '|' + pointim_pic
         interface.basic_pattern = interface.basic_pattern + pointim_pattern
         interface.emot_and_basic = interface.emot_and_basic + pointim_pattern
         interface._basic_pattern_re = re.compile(interface.basic_pattern,
@@ -181,7 +181,7 @@ class Base(object):
         factory.add_default()
         img.set_from_stock('pointim', gtk.ICON_SIZE_MENU)
         self.button.set_image(img)
-        self.button.set_tooltip_text(_('Pointim commands'))
+        self.button.set_tooltip_text(_('Point.im commands'))
         send_button = self.chat_control.xml.get_object('send_button')
         send_button_pos = actions_hbox.child_get_property(send_button,
             'position')
@@ -207,7 +207,7 @@ class Base(object):
         id_ = self.tag_button.connect('clicked', self.on_pointim_tag_button_clicked)
         self.chat_control.handlers[id_] = self.tag_button
         self.tag_button.set_no_show_all(True)
-        self.tag_button.set_tooltip_text(_('Pointim tags'))
+        self.tag_button.set_tooltip_text(_('Point.im tags'))
         self.tag_button.set_property('visible', self.plugin.config[
             'SHOW_TAG_BUTTON'])
 
@@ -287,7 +287,7 @@ class Base(object):
                 return
             childs = self.pointim_link_menu.get_children()
             if post:
-                self.pointim_post_full = gajim.interface.sharp_slash_re\
+                self.pointim_post_full = gajim.interface.pointim_sharp_slash_re\
                                                     .search(word).group(0)
                 self.pointim_post_uid = post.group(1)
                 for menuitem in xrange(7):
@@ -314,15 +314,15 @@ class Base(object):
                 end_iter.forward_char()
             buffer_ = self.textview.tv.get_buffer()
             word = buffer_.get_text(begin_iter, end_iter).decode('utf-8')
-            if kind == 'sharp_slash':
+            if kind == 'pointim_sharp_slash':
                 self.on_insert(widget, word)
             if kind == 'pointim_nick':
                 self.on_insert(widget, 'PM %s' % word.rstrip(':'))
 
     def print_special_text(self, special_text, other_tags, graphics=True):
-        if gajim.interface.sharp_slash_re.match(special_text):
+        if gajim.interface.pointim_sharp_slash_re.match(special_text):
             # insert post num #123456//
-            buffer_, iter_, tag = self.get_iter_and_tag('sharp_slash')
+            buffer_, iter_, tag = self.get_iter_and_tag('pointim_sharp_slash')
             buffer_.insert_with_tags(iter_, special_text, tag)
             self.last_pointim_num = special_text
             self.textview.plugin_modified = True
@@ -510,7 +510,7 @@ class Base(object):
         if tags:
             for tag in tags:
                 tag_name = tag.get_property('name')
-                if tag_name in ('pointim_nick', 'sharp_slash'):
+                if tag_name in ('pointim_nick', 'pointim_sharp_slash'):
                     return True
 
         self.textview.on_textview_button_press_event(widget, event)
@@ -600,7 +600,7 @@ class Base(object):
     def disconnect_from_chat_control(self):
         buffer_ = self.textview.tv.get_buffer()
         tag_table = buffer_.get_tag_table()
-        if tag_table.lookup('sharp_slash'):
+        if tag_table.lookup('pointim_sharp_slash'):
             tag_table.remove(self.textview.tagSharpSlash)
             tag_table.remove(self.textview.tagPointimNick)
             tag_table.remove(self.textview.tagPointimPic)

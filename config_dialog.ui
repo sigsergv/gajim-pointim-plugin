@@ -144,7 +144,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="show_pic">
-            <property name="label" translatable="yes">Show Juick picture preview</property>
+            <property name="label" translatable="yes">Show Point.im picture preview</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="receives_default">False</property>
@@ -204,7 +204,7 @@
               <object class="GtkLabel" id="label1">
                 <property name="visible">True</property>
                 <property name="xalign">0.029999999329447746</property>
-                <property name="label" translatable="yes">Juick link color</property>
+                <property name="label" translatable="yes">Point.im link color</property>
               </object>
               <packing>
                 <property name="position">0</property>
@@ -216,7 +216,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="has_tooltip">True</property>
-                <property name="tooltip_text" translatable="yes">Juick link color</property>
+                <property name="tooltip_text" translatable="yes">Point.im link color</property>
                 <property name="color">#000000000000</property>
                 <signal name="color_set" handler="on_link_colorbutton_color_set"/>
               </object>
@@ -255,7 +255,7 @@
             </child>
             <child>
               <object class="GtkCheckButton" id="show_tag_button">
-                <property name="label" translatable="yes">Show Juick tag button</property>
+                <property name="label" translatable="yes">Show Point.im tag button</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="receives_default">False</property>
@@ -307,7 +307,7 @@
             <child>
               <object class="GtkLabel" id="label4">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">Juick tag button menu options:</property>
+                <property name="label" translatable="yes">Point.im tag button menu options:</property>
               </object>
               <packing>
                 <property name="right_attach">2</property>
