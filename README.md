@@ -8,3 +8,12 @@ Original Juick plugin authors:
 Command to create ready to install ZIP:
 
     $ make zip
+
+
+Changes
+=======
+
+1.0.1
+-----
+
+ * https urls

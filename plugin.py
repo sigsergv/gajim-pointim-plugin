@@ -589,11 +589,11 @@ class Base(object):
         post = self.pointim_post_comment_re.search(self.pointim_post)
         url = None
         if post is not None:
-            url = 'http://point.im/%s#%s' % (post.group(1), post.group(2))
+            url = 'https://point.im/%s#%s' % (post.group(1), post.group(2))
         else:
             post = self.pointim_post_re.search(self.pointim_post)
             if post is not None:
-                url = 'http://point.im/%s' % post.group(1)
+                url = 'https://point.im/%s' % post.group(1)
         if url is not None:
             helpers.launch_browser_mailer('url', url)
 
