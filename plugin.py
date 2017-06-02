@@ -21,11 +21,11 @@ from plugins.gui import GajimPluginConfigDialog
 from conversation_textview import TextViewImage
 import gtkgui_helpers
 
-nb_xmpp = False
-import common.xmpp
-if not dir(common.xmpp):
-    import nbxmpp
-    nb_xmpp = True
+#nb_xmpp = False
+#import common.xmpp
+#if not dir(common.xmpp):
+#    import nbxmpp
+#    nb_xmpp = True
 
 class PointimPlugin(GajimPlugin):
     @log_calls('PointimPlugin')
