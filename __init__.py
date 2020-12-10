@@ -1,1 +1,1 @@
-from plugin import PointimPlugin
+from .plugin import PointimPlugin

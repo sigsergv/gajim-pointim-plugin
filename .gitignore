@@ -1,1 +1,3 @@
 PointIm-plugin.zip
+*.sublime-workspace
+__pycache__
